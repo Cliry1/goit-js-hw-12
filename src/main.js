@@ -6,7 +6,6 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 
 
 const form = document.querySelector(".form");
-const buttonLoad =document.querySelector(".button");
 const ul = document.querySelector(".gallery");
 const loader = document.querySelector(".loader");
 const btnMore = document.querySelector(".button-load-more");
@@ -19,7 +18,27 @@ let totalItems;
 var lightbox = new SimpleLightbox('.gallery a', {   
   captionsData: 'alt',
   captionDelay: 250, }); 
+
+
 form.addEventListener("submit", createListItem);
+
+async function createListItem(event){
+  btnMore.classList.add('search');
+  event.preventDefault();
+  searchInfo= form.item.value.trim();
+  ul.innerHTML = ""
+  pageCount=1;
+  loader.classList.remove("search");
+  const posts = await paramList(pageCount, searchInfo);
+  createImg(posts);
+  form.reset();
+  if(totalItems>40){
+    btnMore.classList.remove('search');
+  }
+  else{
+    btnMore.classList.add('search');
+  }
+}
 
 
 btnMore.addEventListener("click", async ()=>{
@@ -60,8 +79,9 @@ async function paramList(pageCount, searchInfo){
   const collection = await axios.get(`https://pixabay.com/api/?${itemParam}`)
   return collection.data;
 }
+
+
 function createImg(posts){
-  console.log(posts);
   if(posts.total === 0){
     iziToast.error({
       title: 'No result',
@@ -86,20 +106,4 @@ function createImg(posts){
   loader.classList.add('search');
   totalItems = posts.totalHits;
 
-}
-async function createListItem(event){
-  event.preventDefault();
-  searchInfo= form.item.value.trim();
-  ul.innerHTML = ""
-  pageCount=1;
-  loader.classList.remove("search");
-  const posts = await paramList(pageCount, searchInfo);
-  createImg(posts);
-  form.reset();
-  if(totalItems>40){
-    btnMore.classList.remove('search');
-  }
-  else{
-    btnMore.classList.add('search');
-  }
 }
