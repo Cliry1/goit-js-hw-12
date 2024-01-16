@@ -94,6 +94,30 @@
   display: none;
 }
 
+.button-load-more{
+  width: 125px;
+  height: 40px;
+  display: flex;
+  padding: 8px 16px;
+  margin: 32px auto 0;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+  background: #4E75FF;
+  border: none;
+  color: #FFF;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+.button-load-more:hover, .button-load-more:focus{
+  background: #6C8CFF;
+}
+.button-load-more.search{
+  display: none;
+}
 .loader {
   transform: rotateZ(45deg);
   perspective: 1000px;
