@@ -28,16 +28,9 @@ async function createListItem(event){
   searchInfo= form.item.value.trim();
   ul.innerHTML = ""
   pageCount=1;
-  loader.classList.remove("search");
+
   const posts = await paramList(pageCount, searchInfo);
   createImg(posts);
-  form.reset();
-  if(totalItems>40){
-    btnMore.classList.remove('search');
-  }
-  else{
-    btnMore.classList.add('search');
-  }
 }
 
 
@@ -47,26 +40,21 @@ btnMore.addEventListener("click", async ()=>{
     pageCount++;
     const posts = await paramList(pageCount,searchInfo);
     createImg(posts);
-    if(pageCount>=Math.ceil(totalItems/limit)){
-      btnMore.classList.add("search");
-      return iziToast.error({
-        position: "topRight",
-        message: "We're sorry, but you've reached the end of search results."
-      });
-    }
-    else{
-      btnMore.classList.remove('search');
-    }
-
-
-  } catch (error) {
-    console.log(error)
+    form.reset();
+    scrollByElements()
+  } 
+  catch (error) {
+    return iziToast.error({
+      position: "topRight",
+      message: error,
+    });
   }
 })
 
 
 
 async function paramList(pageCount, searchInfo){
+  loader.classList.remove("search");
   const itemParam = new URLSearchParams({
     key:"41728524-9ad3c3555a09648a5caa6ae20",
     q:searchInfo,
@@ -106,4 +94,24 @@ function createImg(posts){
   loader.classList.add('search');
   totalItems = posts.totalHits;
 
+  if(pageCount>=Math.ceil(totalItems/limit)){
+    btnMore.classList.add("search");
+    return iziToast.error({
+      position: "topRight",
+      message: "We're sorry, but you've reached the end of search results."
+    });
+  }
+  else{
+    btnMore.classList.remove('search');
+  }
 }
+
+
+function scrollByElements(){
+  let elem = document.querySelector(".element")
+  let rect = elem.getBoundingClientRect();
+
+  window.scrollBy({
+  top: 2*rect.height,
+  behavior: "smooth",
+});}
